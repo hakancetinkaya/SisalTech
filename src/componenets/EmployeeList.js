@@ -16,7 +16,7 @@ const EmployeeList = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     const [searchTerm, setSearchTerm] = useState('');
-
+    const [isSortingAsc, setIsSortingAsc] = useState(true);
 
     const [EmployeePerPage] = useState(5);
     const handleClose = () => setShow(false);
@@ -41,27 +41,35 @@ const EmployeeList = () => {
     const currentEmployee = employees.slice(indexOfFirstPersonel, indexOfLastPersonel);
     const totalPageNum = Math.ceil(employees.length / EmployeePerPage);
 
-    return (
+    function columnNameSortClick() {
+        if (isSortingAsc) {
+            employees.sort((a, b) => (a.name > b.name ? 1 : -1));
+        } else {
+            employees.sort((a, b) => (a.name > b.name ? -1 : 1));
+        }
 
+        setIsSortingAsc(!isSortingAsc);
+    }
+
+    return (
         <>
-            <div style={{ float: "right" }} data-testid="EmployeePerPage">
+            <div style={{ float: "right",    marginRight: "-27%" }} >
                 <ul className="list search-menu">
                     <li className="list-group-item">
-                        <input type="text" onChange={event => { setSearchTerm(event.target.value) }} class="form-control" id="search-bar" placeholder="Search" style={{ borderBottomLeftRadius: "15px", borderTopLeftRadius: "15px", }} />
+                        <input type="text" onChange={event => { setSearchTerm(event.target.value) }} class="form-control" id="search-bar" placeholder="<    Search..." style={{ borderBottomLeftRadius: "15px", borderTopLeftRadius: "15px", }} />
                     </li>
                     <li className="list-group-item">
-                        <button onClick={handleShow} class="btn btn-success" data-toggle="modal"> <FontAwesomeIcon icon={faPlus} size="xs" /> New</button>
+                        <button onClick={handleShow} class="btn btn-success" data-toggle="modal"> {" "} <FontAwesomeIcon icon={faPlus} size="xs" /> New</button>
                     </li>
                 </ul>
             </div>
-
             <Alert show={showAlert} variant="success">
                 Personel List successfully updated!.
             </Alert>
             <table className="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                    <th onClick={()=>columnNameSortClick()}>Name ↑↓</th>
                         <th>Address</th>
                         <th>Opening Hour</th>
                         <th>Close Hour</th>
@@ -70,12 +78,6 @@ const EmployeeList = () => {
                 </thead>
                 <tbody>
                     {
-                        // currentEmployee.map((employee) => (
-                        //     <tr key={employee.id}>
-                        //         <Employee employee={employee} />
-                        //     </tr>
-                        // ))
-
                         currentEmployee.filter((employee) => {
                             if (searchTerm === "") {
                                 return employee;

@@ -16,7 +16,6 @@ const Employee = ({ employee }) => {
         handleClose();
     }, [employee])
 
-
     return (
         <>
             <td>{employee.name}</td>
